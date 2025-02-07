@@ -1,18 +1,23 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import AuthService from "../../service/auth.service";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
+    gmail: "",
     password: "",
     confirmPassword: "",
+    age: 0,
+    role: "user",
+    address: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle registration logic here
-    console.log(formData);
+    const { confirmPassword, ...others } = formData;
+    console.log("register success ", others);
+    await AuthService.register(others);
   };
 
   return (
@@ -20,9 +25,7 @@ const RegisterPage = () => {
       <h2 className="text-3xl font-bold text-center mb-8">Register</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <div className="block text-sm font-medium text-gray-700">
-            Name
-          </div>
+          <div className="block text-sm font-medium text-gray-700">Name</div>
           <input
             type="text"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
@@ -32,15 +35,13 @@ const RegisterPage = () => {
           />
         </div>
         <div>
-          <div className="block text-sm font-medium text-gray-700">
-            Email
-          </div>
+          <div className="block text-sm font-medium text-gray-700">Email</div>
           <input
             type="email"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            value={formData.email}
+            value={formData.gmail}
             onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
+              setFormData({ ...formData, gmail: e.target.value })
             }
             required
           />
@@ -71,6 +72,27 @@ const RegisterPage = () => {
               setFormData({ ...formData, confirmPassword: e.target.value })
             }
             required
+          />
+        </div>
+        <div>
+          <div className="block text-sm font-medium text-gray-700">Address</div>
+          <input
+            type="text"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            value={formData.address}
+            onChange={(e) =>
+              setFormData({ ...formData, address: e.target.value })
+            }
+            required
+          />
+        </div>
+        <div>
+          <div className="block text-sm font-medium text-gray-700">Age</div>
+          <input
+            type="text"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            value={formData.age}
+            onChange={(e) => setFormData({ ...formData, age: e.target.value })}
           />
         </div>
         <button

@@ -1,19 +1,18 @@
+import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import { RootState } from "../../stores/store";
 
 interface GuardPublicRouteProps {
   children: React.ReactNode;
-  userRole?: string | null;
 }
 
-const GuardPublicRoute: React.FC<GuardPublicRouteProps> = ({
-  children,
-  userRole,
-}) => {
-  if (!userRole) {
-    return <Navigate to="/login" />;
+const GuardPublicRoute: React.FC<GuardPublicRouteProps> = ({ children }) => {
+  const {isAuthenticated} = useSelector((state : RootState) => state.auth);
+  if (isAuthenticated) {
+    return <Navigate to="/" />;
   }
 
-  return <>{children}</>;
+  return children;
 };
 
 export default GuardPublicRoute;

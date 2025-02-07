@@ -1,23 +1,34 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../hooks/useRedux";
-import { login } from "../../stores/slices/auth.slice";
+import AuthService from "../../service/auth.service";
+import {
+  loginFailure,
+  loginStart,
+  loginSuccess,
+} from "../../stores/slices/auth.slice";
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-  const handleSubmit = (e: React.FormEvent) => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ gmail: "", password: "" });
+  // const { loading } = useSelector((state: RootState) => state.auth);
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Giả lập login thành công
-    // dispatch(
-    //   login({
-    //     token: "fake-token",
-    //     userRole: "user",
-    //   })
-    // );
+    loginStart();
+    try {
+      const response = await AuthService.login(formData);
+      console.log(
+        "response",response.data
+      );
+      const {data} = response.data
+      if (response) {
+        dispatch(loginSuccess(data));
+        navigate("/");
+      }
+    } catch (error) {
+      dispatch(loginFailure("nguu"));
+    }
   };
 
   return (
@@ -29,9 +40,9 @@ const LoginPage = () => {
           <input
             type="email"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            value={formData.email}
+            value={formData.gmail}
             onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
+              setFormData({ ...formData, gmail: e.target.value })
             }
             required
           />

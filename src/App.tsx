@@ -10,13 +10,14 @@ import GuardProtectedRoute from "./guards/role-based-guard/GuardProtectedRoute";
 import AuthGuard from "./guards/auth-guard/AuthGuard";
 import { useSelector } from "react-redux";
 import { RootState } from "./stores/store";
+import GuardPublicRoute from "./guards/public-route/GuardPublicRoute";
 
 function App() {
-  const { userAuth } = useSelector((state: RootState) => state.auth);
-  const role = userAuth?.role ?? null;
+  const userAuth =
+    useSelector((state: RootState) => state.auth.userAuth) || null;
+  const role = userAuth?.userData.role ?? null;
 
   const routers = useRoutes([
-
     {
       // general page
       path: "/",
@@ -29,17 +30,17 @@ function App() {
         {
           path: "login",
           element: (
-            <AuthGuard>
+            <GuardPublicRoute>
               <LoginPage />
-            </AuthGuard>
+            </GuardPublicRoute>
           ),
         },
         {
           path: "register",
           element: (
-            <AuthGuard>
+            <GuardPublicRoute>
               <RegisterPage />
-            </AuthGuard>
+            </GuardPublicRoute>
           ),
         },
         {

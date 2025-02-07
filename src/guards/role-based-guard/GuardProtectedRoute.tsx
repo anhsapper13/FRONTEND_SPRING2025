@@ -19,7 +19,7 @@ const GuardProtectedRoute: React.FC<GuardProtectedRouteProps> = ({
     return <Navigate to={"/"} />;
   }
 
-  return <>{children}</>;
+  return children;
 };
 
 export default GuardProtectedRoute;

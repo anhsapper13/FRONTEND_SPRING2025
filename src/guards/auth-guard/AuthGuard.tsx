@@ -5,21 +5,17 @@ import { RootState } from "../../stores/store";
 interface AuthGuardProps {
   children: React.ReactNode;
 }
-
 const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   const { isAuthenticated, loading } = useSelector(
     (state: RootState) => state.auth
   );
-
   if (loading) {
     return <div>Loading...</div>;
   }
-
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }
-
-  return <>{children}</>;
+  return children;
 };
 
 export default AuthGuard;
