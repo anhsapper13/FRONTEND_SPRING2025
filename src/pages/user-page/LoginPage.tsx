@@ -7,6 +7,7 @@ import {
   loginStart,
   loginSuccess,
 } from "../../stores/slices/auth.slice";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();
@@ -18,10 +19,8 @@ const LoginPage = () => {
     loginStart();
     try {
       const response = await AuthService.login(formData);
-      console.log(
-        "response",response.data
-      );
-      const {data} = response.data
+      console.log("response", response.data);
+      const { data } = response.data;
       if (response) {
         dispatch(loginSuccess(data));
         navigate("/");
@@ -30,6 +29,10 @@ const LoginPage = () => {
       dispatch(loginFailure("nguu"));
     }
   };
+  const handleSuccessGoogle  = (credentialResponse : CredentialResponse)=>{
+    console.log("credential",credentialResponse.credential);
+    
+  }
 
   return (
     <div className="max-w-md mx-auto">
@@ -72,6 +75,9 @@ const LoginPage = () => {
           <Link to="/register" className="text-blue-500 hover:text-blue-600">
             Register here
           </Link>
+          <GoogleLogin 
+            onSuccess={handleSuccessGoogle}
+          />
         </p>
       </form>
     </div>
